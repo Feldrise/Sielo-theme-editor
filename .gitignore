@@ -1,0 +1,9 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/SNThemeEditor/v14
+/SNThemeEditor.pro.user
+/SNThemeEditor.sln
+/SNThemeEditor.vcxproj
+/SNThemeEditor.vcxproj.filters
