@@ -25,6 +25,8 @@ public:
 	void saveThm();
 
 	ToolBar* addNewToolBar(Qt::ToolBarArea area = Qt::TopToolBarArea);
+	void createNewToolBar();
+	void deleteToolBar(ToolBar *toolBar);
 
 	QAction *m_backAction{ new QAction(QObject::tr("&Précédent"), this) };
 	QAction *m_nextAction{ new QAction(QObject::tr("&Suivant"), this) };
@@ -59,6 +61,8 @@ private:
 	QAction *m_newThm{ new QAction(QObject::tr("Nouveau thème"), this) };
 	QAction *m_openThm{ new QAction(QObject::tr("Ouvrir un thème"), this) };
 	QAction *m_saveThm{ new QAction(QObject::tr("Sauvegarder le thème"), this) };
+
+	QAction *m_newToolBar{ new QAction(QObject::tr("Nouvelle barre d'outils"), this) };
 
 	QVector<ToolBar*> m_toolBars{};
 };

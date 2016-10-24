@@ -16,6 +16,8 @@ MainWindow::MainWindow(QWidget * parent) :
 	connect(m_newThm, &QAction::triggered, this, &MainWindow::newThm);
 	connect(m_openThm, &QAction::triggered, this, &MainWindow::openThm);
 	connect(m_saveThm, &QAction::triggered, this, &MainWindow::saveThm);
+	
+	connect(m_newToolBar, &QAction::triggered, this, &MainWindow::createNewToolBar);
 
 //	QMessageBox::information(this, "DEBUG", QStandardPaths::writableLocation(QStandardPaths::TempLocation));
 }
@@ -33,6 +35,10 @@ void MainWindow::createMenus()
 	fileMenu->addAction(m_openThm);
 	fileMenu->addSeparator();
 	fileMenu->addAction(m_saveThm);
+
+	QMenu *themeMenu = menuBar()->addMenu(tr("&Thèmes"));
+
+	themeMenu->addAction(m_newToolBar);
 }
 
 void MainWindow::createActions()
@@ -90,6 +96,17 @@ ToolBar *MainWindow::addNewToolBar(Qt::ToolBarArea area)
 	addToolBar(area, newToolBar);
 
 	return newToolBar;
+}
+
+void MainWindow::createNewToolBar()
+{
+	QToolBar *newToolBar{ addNewToolBar() };
+}
+
+void MainWindow::deleteToolBar(ToolBar *toolBar)
+{
+	removeToolBar(toolBar);
+	m_toolBars.remove(m_toolBars.indexOf(toolBar));
 }
 
 void MainWindow::newThm()

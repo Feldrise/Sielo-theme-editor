@@ -13,6 +13,7 @@ ToolBar::ToolBar(MainWindow * parent) :
 	addSeparator();
 
 	connect(m_paramAction, &QAction::triggered, this, &ToolBar::openParams);
+	connect(m_removeAction, &QAction::triggered, this, &ToolBar::deleteThis);
 }
 
 ToolBar::~ToolBar()
@@ -41,6 +42,11 @@ void ToolBar::reset()
 	addAction(m_removeAction);
 	addSeparator();
 	addSeparator();
+}
+
+void ToolBar::deleteThis()
+{
+	m_parent->deleteToolBar(this);
 }
 
 void ToolBar::openParams()
@@ -99,7 +105,7 @@ void ManageToolBar::newItem()
 	items << "urlArea" << "searchArea" << "spacer";
 
 	bool ok{ false };
-	QString newAction{ QInputDialog::getItem(this, tr("Action à ajouter"), tr("Actions : "), items, 0, false, &ok) };
+	QString newAction{ QInputDialog::getItem(this, tr("Action à ajouter"), tr("Iteme : "), items, 0, false, &ok) };
 
 	if (ok && !newAction.isEmpty()) {
 		if (newAction != "urlArea" &&

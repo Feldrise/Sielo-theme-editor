@@ -24,6 +24,9 @@ public:
 	void addNewWidget(QWidget *widget);
 	void reset();
 
+	void deleteThis();
+
+
 	QVector<QObject*> itemInToolBar{};
 private:
 	void openParams();
