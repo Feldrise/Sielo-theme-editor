@@ -12,16 +12,37 @@
 #include <QIcon>
 #include <QVector>
 
-class TooBar;
+class MainWindow;
+
+class ToolBar : public QToolBar
+{
+public:
+	ToolBar(MainWindow *parent = nullptr);
+	~ToolBar();
+
+	void addNewAction(QAction *action);
+	void reset();
+
+	QVector<QAction*> actionsInToolBar{};
+private:
+	void openParams();
+
+	MainWindow *m_parent{ nullptr };
+	QAction *m_paramAction{ new QAction(QIcon("Images/setting.png"), QObject::tr("Paramètres"), this) };
+	QAction *m_removeAction{ new QAction(QIcon("Images/remove.png"), QObject::tr("Supprimer la barre d'outils"), this) };
+};
 
 class ManageToolBar : public QDialog
 {
 public:
-	ManageToolBar(ToolBar *parentToolBar, QWidget *parent = nullptr);
+	ManageToolBar(ToolBar *parentToolBar, MainWindow *parent);
 	~ManageToolBar();
 
+	void accept();
 private:
 	ToolBar *m_parentToolBar{ nullptr };
+	MainWindow *m_parent{ nullptr };
+
 	QVBoxLayout *m_layout{ new QVBoxLayout(this) };
 	QHBoxLayout *m_buttonLayout{ new QHBoxLayout() };
 
@@ -32,18 +53,4 @@ private:
 	QPushButton *m_deleteButton{ new QPushButton(QObject::tr("Supprimer"), this) };
 	QDialogButtonBox *m_boxBtn{ new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this) };
 
-};
-
-class ToolBar : public QToolBar
-{
-public:
-	ToolBar(QWidget *parent = nullptr);
-	~ToolBar();
-
-	void reset();
-
-	QVector<QAction*> m_actions{};
-private:
-	QAction *m_paramAction{ new QAction(QIcon("Images/setting.png"), QObject::tr("Paramètres"), this) };
-	QAction *m_removeAction{ new QAction(QIcon("Images/remove.png"), QObject::tr("Supprimer la barre d'outils"), this) };
 };

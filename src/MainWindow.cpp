@@ -38,28 +38,40 @@ void MainWindow::createMenus()
 void MainWindow::createActions()
 {
 		m_backAction->setIcon(QIcon(m_thmPath + "back.png"));
+		m_backAction->setObjectName("back");
 		m_editableAction.insert("back", m_backAction);
 		m_nextAction->setIcon(QIcon(m_thmPath + "next.png"));
+		m_nextAction->setObjectName("next");
 		m_editableAction.insert("next", m_nextAction);
 		m_homeAction->setIcon(QIcon(m_thmPath + "home.png"));
+		m_homeAction->setObjectName("home");
 		m_editableAction.insert("home", m_homeAction);
 		m_refreshOrStopAction->setIcon(QIcon(m_thmPath + "refresh.png"));
+		m_refreshOrStopAction->setObjectName("refresh");
 		m_editableAction.insert("refresh", m_refreshOrStopAction);
 		m_goAction->setIcon(QIcon(m_thmPath + "go.png"));
+		m_goAction->setObjectName("go");
 		m_editableAction.insert("go", m_goAction);
 		m_searchAction->setIcon(QIcon(m_thmPath + "search.png"));
+		m_searchAction->setObjectName("search");
 		m_editableAction.insert("search", m_searchAction);
 		m_sowHistory->setIcon(QIcon(m_thmPath + "history.png"));
+		m_sowHistory->setObjectName("history");
 		m_editableAction.insert("history", m_sowHistory);
 		m_preferencesAction->setIcon(QIcon(m_thmPath + "preferences.png"));
+		m_preferencesAction->setObjectName("preferenes");
 		m_editableAction.insert("preferences", m_preferencesAction);
 		m_addBookmarksAction->setIcon(QIcon(m_thmPath + "addFavoris.png"));
+		m_addBookmarksAction->setObjectName("addBookmarks");
 		m_editableAction.insert("addBookmarks", m_addBookmarksAction);
 		m_bookmarsManagerAction->setIcon(QIcon(m_thmPath + "favoris.png"));
+		m_bookmarsManagerAction->setObjectName("bookmarksManager");
 		m_editableAction.insert("bookmarksManager", m_bookmarsManagerAction);
 		m_newTabAction->setIcon(QIcon(m_thmPath + "newTab.png"));
+		m_newTabAction->setObjectName("newTab");
 		m_editableAction.insert("newTab", m_newTabAction);
 		m_newWindowAction->setIcon(QIcon(m_thmPath + "newWindow.png"));
+		m_newWindowAction->setObjectName("newWindow");
 		m_editableAction.insert("newWindow", m_newWindowAction);
 		m_exitAction->setIcon(QIcon(m_thmPath + "exit.png"));
 }
@@ -93,10 +105,10 @@ void MainWindow::openThm()
 	ToolBar *t1{ addNewToolBar() };
 	ToolBar *t2{ addNewToolBar(Qt::LeftToolBarArea) };
 	
-	t1->addAction(m_backAction);
-	t1->addAction(m_nextAction);
+	t1->addNewAction(m_backAction);
+	t1->addNewAction(m_nextAction);
 
-	t2->addAction(m_backAction);
+	t2->addNewAction(m_backAction);
 
 }
 
