@@ -40,6 +40,7 @@ public:
 	~ManageToolBar();
 
 	void newItem();
+	void removeItem();
 
 	void accept();
 private:

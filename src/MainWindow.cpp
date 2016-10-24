@@ -59,7 +59,7 @@ void MainWindow::createActions()
 		m_sowHistory->setObjectName("history");
 		m_editableAction.insert("history", m_sowHistory);
 		m_preferencesAction->setIcon(QIcon(m_thmPath + "preferences.png"));
-		m_preferencesAction->setObjectName("preferenes");
+		m_preferencesAction->setObjectName("preferences");
 		m_editableAction.insert("preferences", m_preferencesAction);
 		m_addBookmarksAction->setIcon(QIcon(m_thmPath + "addFavoris.png"));
 		m_addBookmarksAction->setObjectName("addBookmarks");
@@ -79,6 +79,8 @@ void MainWindow::createActions()
 		m_urlArea->setObjectName("urlArea");
 		m_searchArea->setPlaceholderText(tr("Recherche google"));
 		m_searchArea->setObjectName("searchArea");
+		m_spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+		m_spacer->setObjectName("spacer");
 }
 
 ToolBar *MainWindow::addNewToolBar(Qt::ToolBarArea area)

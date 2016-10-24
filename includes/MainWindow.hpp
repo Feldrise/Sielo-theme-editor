@@ -42,6 +42,7 @@ public:
 
 	QLineEdit *m_urlArea{ new QLineEdit(this) };
 	QLineEdit *m_searchArea{ new QLineEdit(this) };
+	QWidget *m_spacer{ new QWidget(this) };
 
 	QHash<QString, QAction*> m_editableAction{};
 protected:

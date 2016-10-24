@@ -58,6 +58,7 @@ ManageToolBar::ManageToolBar(ToolBar * parentToolBar, MainWindow * parent) :
 	m_view->setDragEnabled(true);
 	m_view->setDropIndicatorShown(true);
 	m_view->setModel(m_model);
+	m_view->setEditTriggers(QListView::NoEditTriggers);
 
 	for (int i{ 0 }; i < m_parentToolBar->itemInToolBar.size(); ++i) {
 		QString actionName{ m_parentToolBar->itemInToolBar[i]->objectName() };
@@ -75,6 +76,7 @@ ManageToolBar::ManageToolBar(ToolBar * parentToolBar, MainWindow * parent) :
 	m_buttonLayout->addWidget(m_boxBtn);
 
 	connect(m_newButton, &QPushButton::clicked, this, &ManageToolBar::newItem);
+	connect(m_deleteButton, &QPushButton::clicked, this, &ManageToolBar::removeItem);
 	connect(m_boxBtn, &QDialogButtonBox::accepted, this, &ManageToolBar::accept);
 	connect(m_boxBtn, &QDialogButtonBox::rejected, this, &ManageToolBar::close);
 }
@@ -94,13 +96,15 @@ void ManageToolBar::newItem()
 		i.next();
 		items << i.key();
 	}
-	items << "urlArea" << "searchArea";
+	items << "urlArea" << "searchArea" << "spacer";
 
 	bool ok{ false };
 	QString newAction{ QInputDialog::getItem(this, tr("Action à ajouter"), tr("Actions : "), items, 0, false, &ok) };
 
 	if (ok && !newAction.isEmpty()) {
-		if (newAction != "urlArea" && newAction != "searchArea") {
+		if (newAction != "urlArea" &&
+			newAction != "searchArea" &&
+			newAction != "spacer") {
 			QString actionName{ m_parent->m_editableAction[newAction]->objectName() };
 			QIcon actionIcon{ m_parent->m_editableAction[newAction]->icon() };
 			m_model->appendRow(new QStandardItem(actionIcon, actionName));
@@ -109,7 +113,15 @@ void ManageToolBar::newItem()
 			m_model->appendRow(new QStandardItem("urlArea"));
 		else if (newAction == "searchArea")
 			m_model->appendRow(new QStandardItem("searchArea"));
+		else if (newAction == "spacer")
+			m_model->appendRow(new QStandardItem("spacer"));
 	}
+}
+
+void ManageToolBar::removeItem()
+{
+	QModelIndex index{ m_view->currentIndex() };
+	m_model->removeRow(index.row());
 }
 
 void ManageToolBar::accept()
@@ -117,12 +129,16 @@ void ManageToolBar::accept()
 	m_parentToolBar->reset();
 
 	for (int i{ 0 }; i < m_model->rowCount(); ++i) {
-		if (m_model->item(i)->text() != "urlArea" && m_model->item(i)->text() != "searchArea")
+		if (m_model->item(i)->text() != "urlArea" &&
+			m_model->item(i)->text() != "searchArea" &&
+			m_model->item(i)->text() != "spacer")
 			m_parentToolBar->addNewAction(m_parent->m_editableAction[m_model->item(i)->text()]);
 		else if (m_model->item(i)->text() == "urlArea")
 			m_parentToolBar->addNewWidget(m_parent->m_urlArea);
 		else if (m_model->item(i)->text() == "searchArea")
 			m_parentToolBar->addNewWidget(m_parent->m_searchArea);
+		else if (m_model->item(i)->text() == "spacer")
+			m_parentToolBar->addNewWidget(m_parent->m_spacer);
 	}
 
 	close();
