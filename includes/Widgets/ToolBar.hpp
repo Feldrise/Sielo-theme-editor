@@ -17,10 +17,11 @@ class TooBar;
 class ManageToolBar : public QDialog
 {
 public:
-	ManageToolBar(QWidget *parent = nullptr, ToolBar *parentToolBar);
+	ManageToolBar(ToolBar *parentToolBar, QWidget *parent = nullptr);
 	~ManageToolBar();
 
 private:
+	ToolBar *m_parentToolBar{ nullptr };
 	QVBoxLayout *m_layout{ new QVBoxLayout(this) };
 	QHBoxLayout *m_buttonLayout{ new QHBoxLayout() };
 
