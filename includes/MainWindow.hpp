@@ -3,6 +3,7 @@
 #include <QMainWindow>
 #include <QWidget>
 #include <QAction>
+#include <QLineEdit>
 #include <QIcon>
 #include <QHash>
 #include <QVector>
@@ -38,6 +39,9 @@ public:
 	QAction *m_newTabAction{ new QAction(QObject::tr("Nouvel onglet"), this) };
 	QAction *m_newWindowAction{ new QAction(QObject::tr("Nouvelle fenêtre"), this) };
 	QAction *m_exitAction{ new QAction(QObject::tr("Fermer le navigateur"), this) };
+
+	QLineEdit *m_urlArea{ new QLineEdit(this) };
+	QLineEdit *m_searchArea{ new QLineEdit(this) };
 
 	QHash<QString, QAction*> m_editableAction{};
 protected:

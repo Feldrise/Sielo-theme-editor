@@ -21,9 +21,10 @@ public:
 	~ToolBar();
 
 	void addNewAction(QAction *action);
+	void addNewWidget(QWidget *widget);
 	void reset();
 
-	QVector<QAction*> actionsInToolBar{};
+	QVector<QObject*> itemInToolBar{};
 private:
 	void openParams();
 
@@ -37,6 +38,8 @@ class ManageToolBar : public QDialog
 public:
 	ManageToolBar(ToolBar *parentToolBar, MainWindow *parent);
 	~ManageToolBar();
+
+	void newItem();
 
 	void accept();
 private:

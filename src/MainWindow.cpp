@@ -74,6 +74,11 @@ void MainWindow::createActions()
 		m_newWindowAction->setObjectName("newWindow");
 		m_editableAction.insert("newWindow", m_newWindowAction);
 		m_exitAction->setIcon(QIcon(m_thmPath + "exit.png"));
+
+		m_urlArea->setPlaceholderText(tr("Ici l'url de la page"));
+		m_urlArea->setObjectName("urlArea");
+		m_searchArea->setPlaceholderText(tr("Recherche google"));
+		m_searchArea->setObjectName("searchArea");
 }
 
 ToolBar *MainWindow::addNewToolBar(Qt::ToolBarArea area)
@@ -109,6 +114,7 @@ void MainWindow::openThm()
 	t1->addNewAction(m_nextAction);
 
 	t2->addNewAction(m_backAction);
+	t2->addNewWidget(m_searchArea);
 
 }
 
