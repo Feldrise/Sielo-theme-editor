@@ -19,6 +19,7 @@ public:
 
 	void createMenus();
 	void createActions();
+	void loadToolBar(QString &filePath);
 
 	void newThm();
 	void openThm();

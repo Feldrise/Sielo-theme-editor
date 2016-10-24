@@ -1,11 +1,17 @@
 #include "includes/MainWindow.hpp"
+#include "includes/ThemeManager.hpp"
 
 #include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QInputDialog>
+#include <QFileDialog>
+#include <QTextStream>
 #include <QStandardPaths>
 #include <QDir>
+
+const unsigned int THEME_V0 = 1;
+const unsigned int THEME_V1 = 2;
 
 MainWindow::MainWindow(QWidget * parent) : 
 	QMainWindow(parent)
@@ -19,6 +25,8 @@ MainWindow::MainWindow(QWidget * parent) :
 	
 	connect(m_newToolBar, &QAction::triggered, this, &MainWindow::createNewToolBar);
 
+	setObjectName("Win");
+	QMessageBox::information(this, "DEBUG", m_urlArea->parent()->objectName());
 //	QMessageBox::information(this, "DEBUG", QStandardPaths::writableLocation(QStandardPaths::TempLocation));
 }
 
@@ -87,6 +95,45 @@ void MainWindow::createActions()
 		m_searchArea->setObjectName("searchArea");
 		m_spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 		m_spacer->setObjectName("spacer");
+
+}
+
+void MainWindow::loadToolBar(QString & filePath)
+{
+	QFile file{ filePath };
+
+	if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+		QMessageBox::critical(this, tr("Erreur"), tr("Impossible d'ouvrir le thème de la barre d'outils"));
+	}
+
+	QTextStream in{ &file };
+
+	unsigned version{ 0 };
+	in >> version;
+
+	unsigned nbreToolBar{ 0 };
+	switch (version)
+	{
+	case THEME_V0:
+		in >> nbreToolBar;
+
+		for (size_t i{ 0 }; i < nbreToolBar; ++i) {
+			ToolBar *newToolBar{ addNewToolBar() };
+			newToolBar->loadToolBarV0(in);
+		}
+		break;
+	case THEME_V1:
+		in >> nbreToolBar;
+
+		for (size_t i{ 0 }; i < nbreToolBar; ++i) {
+			m_toolBars.push_back(new ToolBar(this));
+			m_toolBars[i]->loadToolBarV1(in);
+		}
+		break;
+	default:
+		QMessageBox::critical(this, tr("Erreur"), tr("La version ") + QString::number(version) + tr(" est inconnue"));
+		break;
+	}
 }
 
 ToolBar *MainWindow::addNewToolBar(Qt::ToolBarArea area)
@@ -126,15 +173,18 @@ void MainWindow::newThm()
 
 void MainWindow::openThm()
 {
-	ToolBar *t1{ addNewToolBar() };
-	ToolBar *t2{ addNewToolBar(Qt::LeftToolBarArea) };
-	
-	t1->addNewAction(m_backAction);
-	t1->addNewAction(m_nextAction);
+	QString filePath{ QFileDialog::getOpenFileName(this, tr("Ouvrir un thème"), QString(), "Sielo Thèmes (*.snthm)") };
 
-	t2->addNewAction(m_backAction);
-	t2->addNewWidget(m_searchArea);
+	if (!filePath.isEmpty()) {
+		QFileInfo thmInfo{ filePath };
+		m_thmPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/SNThemeEditor/" + thmInfo.baseName() + "/";
+		QDir *themePath{ new QDir(m_thmPath) };
+		themePath->mkpath(m_thmPath);
+		ThemeManager::decompressTheme(filePath, themePath->absolutePath());
 
+		loadToolBar(QString(m_thmPath + "toolBar.txt"));
+		createActions();
+	}
 }
 
 void MainWindow::saveThm()

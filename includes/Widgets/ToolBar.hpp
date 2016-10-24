@@ -26,6 +26,8 @@ public:
 
 	void deleteThis();
 
+	void loadToolBarV0(QTextStream & in);
+	void loadToolBarV1(QTextStream & in);
 
 	QVector<QObject*> itemInToolBar{};
 private:

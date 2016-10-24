@@ -2,6 +2,9 @@
 #include "includes/MainWindow.hpp"
 
 #include <QInputDialog>
+#include <QMessageBox>
+#include <QString>
+#include <QTextStream>
 
 ToolBar::ToolBar(MainWindow * parent) : 
 	QToolBar(parent),
@@ -14,6 +17,8 @@ ToolBar::ToolBar(MainWindow * parent) :
 
 	connect(m_paramAction, &QAction::triggered, this, &ToolBar::openParams);
 	connect(m_removeAction, &QAction::triggered, this, &ToolBar::deleteThis);
+
+	setObjectName("tool");
 }
 
 ToolBar::~ToolBar()
@@ -29,12 +34,17 @@ void ToolBar::addNewAction(QAction *action)
 
 void ToolBar::addNewWidget(QWidget * widget)
 {
+	widget->setParent(m_parent);
+	QMessageBox::information(this, "DEBUG", widget->parent()->objectName());
 	itemInToolBar.push_back(widget);
 	addWidget(widget);
 }
 
 void ToolBar::reset()
 {
+	m_parent->m_urlArea->setParent(m_parent);
+	m_parent->m_searchArea->setParent(m_parent);
+	m_parent->m_spacer->setParent(m_parent);
 	itemInToolBar.clear();
 	clear();
 
@@ -42,11 +52,85 @@ void ToolBar::reset()
 	addAction(m_removeAction);
 	addSeparator();
 	addSeparator();
+
 }
 
 void ToolBar::deleteThis()
 {
 	m_parent->deleteToolBar(this);
+}
+
+void ToolBar::loadToolBarV0(QTextStream & in)
+{
+
+}
+
+void ToolBar::loadToolBarV1(QTextStream & in)
+{
+	unsigned widgetInToolBar{ 0 };
+	unsigned iconSize{ 32 };
+	QString currentWidget{ "nothing" };
+	QString toolBarPos{ "top" };
+
+	in >> toolBarPos; //< Tool bar position in the window
+	in >> iconSize;
+	in >> widgetInToolBar; //< Number of widgets in the tool bar from the tooBar.txt file
+
+	if (toolBarPos == "left")
+		m_parent->addToolBar(Qt::LeftToolBarArea, this);
+	else if (toolBarPos == "right")
+		m_parent->addToolBar(Qt::RightToolBarArea, this);
+	else if (toolBarPos == "bottom")
+		m_parent->addToolBar(Qt::BottomToolBarArea, this);
+	else
+		m_parent->addToolBar(this);
+
+	setIconSize(QSize(iconSize, iconSize));
+
+	for (size_t i{ 0 }; i < widgetInToolBar; ++i) {
+		in >> currentWidget;
+		if (currentWidget == "back")
+			addNewAction(m_parent->m_backAction);
+		else if (currentWidget == "next")
+			addNewAction(m_parent->m_nextAction);
+		else if (currentWidget == "home")
+			addNewAction(m_parent->m_homeAction);
+		else if (currentWidget == "refresh")
+			addNewAction(m_parent->m_refreshOrStopAction);
+		else if (currentWidget == "go")
+			addNewAction(m_parent->m_goAction);
+		else if (currentWidget == "search")
+			addNewAction(m_parent->m_searchAction);
+		else if (currentWidget == "history")
+			addNewAction(m_parent->m_sowHistory);
+		else if (currentWidget == "preferences")
+			addNewAction(m_parent->m_preferencesAction);
+		else if (currentWidget == "addBookmarks")
+			addNewAction(m_parent->m_addBookmarksAction);
+		else if (currentWidget == "bookmarksManager")
+			addNewAction(m_parent->m_bookmarsManagerAction);
+		else if (currentWidget == "newTab")
+			addNewAction(m_parent->m_newTabAction);
+		else if (currentWidget == "newWin")
+			addNewAction(m_parent->m_newWindowAction);
+		else if (currentWidget == "urlArea") {
+			addNewWidget(m_parent->m_urlArea);
+		}
+		else if (currentWidget == "searchArea") {
+			addNewWidget(m_parent->m_searchArea);
+		}
+		else if (currentWidget == "separator") {
+			addSeparator();
+		}
+		else if (currentWidget == "spacer") {
+			addNewWidget(m_parent->m_spacer);
+		}
+		else {
+			QMessageBox::warning(this, tr("Probleme"), tr("Une erreur est présente à la ligne numéro ") + QString::number(i + 1) + tr(". "
+				"La barre de navigation risque de ne pas se charger comme prévu"
+				"Nous vous conseillons de contacter le créateur du thème pour qu'il corrige l'erreur au plus vite."));
+		}
+	}
 }
 
 void ToolBar::openParams()
@@ -139,13 +223,19 @@ void ManageToolBar::accept()
 			m_model->item(i)->text() != "searchArea" &&
 			m_model->item(i)->text() != "spacer")
 			m_parentToolBar->addNewAction(m_parent->m_editableAction[m_model->item(i)->text()]);
-		else if (m_model->item(i)->text() == "urlArea")
+		else if (m_model->item(i)->text() == "urlArea") {
+			m_parent->m_urlArea = new QLineEdit(m_parent);
+			m_parent->m_urlArea->setPlaceholderText(tr("Ici l'url de la page"));
+			m_parent->m_urlArea->setObjectName("urlArea");
 			m_parentToolBar->addNewWidget(m_parent->m_urlArea);
+		}
 		else if (m_model->item(i)->text() == "searchArea")
 			m_parentToolBar->addNewWidget(m_parent->m_searchArea);
 		else if (m_model->item(i)->text() == "spacer")
 			m_parentToolBar->addNewWidget(m_parent->m_spacer);
 	}
+
+	QMessageBox::information(this, "DEBUG", m_parent->m_urlArea->parent()->objectName());
 
 	close();
 }
