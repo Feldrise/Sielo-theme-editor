@@ -25,8 +25,6 @@ MainWindow::MainWindow(QWidget * parent) :
 	
 	connect(m_newToolBar, &QAction::triggered, this, &MainWindow::createNewToolBar);
 
-	setObjectName("Win");
-	QMessageBox::information(this, "DEBUG", m_urlArea->parent()->objectName());
 //	QMessageBox::information(this, "DEBUG", QStandardPaths::writableLocation(QStandardPaths::TempLocation));
 }
 
@@ -89,12 +87,6 @@ void MainWindow::createActions()
 		m_editableAction.insert("newWindow", m_newWindowAction);
 		m_exitAction->setIcon(QIcon(m_thmPath + "exit.png"));
 
-		m_urlArea->setPlaceholderText(tr("Ici l'url de la page"));
-		m_urlArea->setObjectName("urlArea");
-		m_searchArea->setPlaceholderText(tr("Recherche google"));
-		m_searchArea->setObjectName("searchArea");
-		m_spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-		m_spacer->setObjectName("spacer");
 
 }
 

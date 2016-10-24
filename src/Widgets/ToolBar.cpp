@@ -42,9 +42,14 @@ void ToolBar::addNewWidget(QWidget * widget)
 
 void ToolBar::reset()
 {
-	m_parent->m_urlArea->setParent(m_parent);
-	m_parent->m_searchArea->setParent(m_parent);
-	m_parent->m_spacer->setParent(m_parent);
+	for (int i{ 0 }; i < itemInToolBar.size(); i++) {
+		if (itemInToolBar[i]->objectName() == "urlArea")
+			m_parent->m_urlAreas.remove(m_parent->m_urlAreas.indexOf(static_cast<QLineEdit*>(itemInToolBar[i])));
+		else if (itemInToolBar[i]->objectName() == "searchArea")
+			m_parent->m_searchAreas.remove(m_parent->m_searchAreas.indexOf(static_cast<QLineEdit*>(itemInToolBar[i])));
+		else if (itemInToolBar[i]->objectName() == "spacer")
+			m_parent->m_spacers.remove(m_parent->m_spacers.indexOf(static_cast<QWidget*>(itemInToolBar[i])));
+	}
 	itemInToolBar.clear();
 	clear();
 
@@ -114,16 +119,28 @@ void ToolBar::loadToolBarV1(QTextStream & in)
 		else if (currentWidget == "newWin")
 			addNewAction(m_parent->m_newWindowAction);
 		else if (currentWidget == "urlArea") {
-			addNewWidget(m_parent->m_urlArea);
+			QLineEdit *newUrlArea{ new QLineEdit(m_parent) };
+			newUrlArea->setPlaceholderText(QObject::tr("Ici l'url de la page"));
+			newUrlArea->setObjectName("urlArea");
+			m_parent->m_urlAreas.push_back(newUrlArea);
+			addNewWidget(newUrlArea);
 		}
 		else if (currentWidget == "searchArea") {
-			addNewWidget(m_parent->m_searchArea);
+			QLineEdit *newSearchArea{ new QLineEdit(m_parent) };
+			newSearchArea->setPlaceholderText(tr("Recherche Google"));
+			newSearchArea->setObjectName("searchArea");
+			m_parent->m_searchAreas.push_back(newSearchArea);
+			addNewWidget(newSearchArea);
 		}
 		else if (currentWidget == "separator") {
 			addSeparator();
 		}
 		else if (currentWidget == "spacer") {
-			addNewWidget(m_parent->m_spacer);
+			QWidget *newSpacer{ new QWidget(m_parent) };
+			newSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+			newSpacer->setObjectName("spacer");
+			m_parent->m_spacers.push_back(newSpacer);
+			addNewWidget(newSpacer);
 		}
 		else {
 			QMessageBox::warning(this, tr("Probleme"), tr("Une erreur est présente à la ligne numéro ") + QString::number(i + 1) + tr(". "
@@ -224,18 +241,27 @@ void ManageToolBar::accept()
 			m_model->item(i)->text() != "spacer")
 			m_parentToolBar->addNewAction(m_parent->m_editableAction[m_model->item(i)->text()]);
 		else if (m_model->item(i)->text() == "urlArea") {
-			m_parent->m_urlArea = new QLineEdit(m_parent);
-			m_parent->m_urlArea->setPlaceholderText(tr("Ici l'url de la page"));
-			m_parent->m_urlArea->setObjectName("urlArea");
-			m_parentToolBar->addNewWidget(m_parent->m_urlArea);
+			QLineEdit *newUrlArea{ new QLineEdit(m_parent) };
+			newUrlArea->setPlaceholderText(QObject::tr("Ici l'url de la page"));
+			newUrlArea->setObjectName("urlArea");
+			m_parent->m_urlAreas.push_back(newUrlArea);
+			m_parentToolBar->addNewWidget(newUrlArea);
 		}
-		else if (m_model->item(i)->text() == "searchArea")
-			m_parentToolBar->addNewWidget(m_parent->m_searchArea);
-		else if (m_model->item(i)->text() == "spacer")
-			m_parentToolBar->addNewWidget(m_parent->m_spacer);
+		else if (m_model->item(i)->text() == "searchArea") {
+			QLineEdit *newSearchArea{ new QLineEdit(m_parent) };
+			newSearchArea->setPlaceholderText(tr("Recherche Google"));
+			newSearchArea->setObjectName("searchArea");
+			m_parent->m_searchAreas.push_back(newSearchArea);
+			m_parentToolBar->addNewWidget(newSearchArea);
+		}
+		else if (m_model->item(i)->text() == "spacer") {
+			QWidget *newSpacer{ new QWidget(m_parent) };
+			newSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+			newSpacer->setObjectName("spacer");
+			m_parent->m_spacers.push_back(newSpacer);
+			m_parentToolBar->addNewWidget(newSpacer);
+		}
 	}
-
-	QMessageBox::information(this, "DEBUG", m_parent->m_urlArea->parent()->objectName());
 
 	close();
 }

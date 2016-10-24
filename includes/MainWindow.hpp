@@ -43,9 +43,9 @@ public:
 	QAction *m_newWindowAction{ new QAction(QObject::tr("Nouvelle fenêtre"), this) };
 	QAction *m_exitAction{ new QAction(QObject::tr("Fermer le navigateur"), this) };
 
-	QLineEdit *m_urlArea{ new QLineEdit(this) };
-	QLineEdit *m_searchArea{ new QLineEdit(this) };
-	QWidget *m_spacer{ new QWidget(this) };
+	QVector<QLineEdit*> m_urlAreas{};
+	QVector<QLineEdit*> m_searchAreas{};
+	QVector<QWidget*> m_spacers{};
 
 	QHash<QString, QAction*> m_editableAction{};
 protected:
