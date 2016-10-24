@@ -24,23 +24,26 @@ public:
 	void newThm();
 	void openThm();
 	void saveThm();
+	void saveThmAs();
+
+	void closeThm();
 
 	ToolBar* addNewToolBar(Qt::ToolBarArea area = Qt::TopToolBarArea);
 	void createNewToolBar();
 	void deleteToolBar(ToolBar *toolBar);
 
-	QAction *m_backAction{ new QAction(QObject::tr("&Précédent"), this) };
+	QAction *m_backAction{ new QAction(QObject::tr("&PrÃ©cÃ©dent"), this) };
 	QAction *m_nextAction{ new QAction(QObject::tr("&Suivant"), this) };
 	QAction *m_homeAction{ new QAction(QObject::tr("&Accueil"), this) };
 	QAction *m_refreshOrStopAction{ new QAction(QObject::tr("&Rafraichir"), this) };
 	QAction *m_goAction{ new QAction(QObject::tr("&Go"), this) };
 	QAction *m_searchAction{ new QAction(QObject::tr("Chercher"), this) };
 	QAction *m_sowHistory{ new QAction(QObject::tr("&Historique"), this) };
-	QAction *m_preferencesAction{ new QAction(QObject::tr("Pré&férences"), this) };
+	QAction *m_preferencesAction{ new QAction(QObject::tr("PrÃ©&fÃ©rences"), this) };
 	QAction *m_addBookmarksAction{ new QAction(QObject::tr("&Nouveau favori"), this) };
-	QAction *m_bookmarsManagerAction{ new QAction(QObject::tr("&Gérer les favoris")) };
+	QAction *m_bookmarsManagerAction{ new QAction(QObject::tr("&GÃ©rer les favoris")) };
 	QAction *m_newTabAction{ new QAction(QObject::tr("Nouvel onglet"), this) };
-	QAction *m_newWindowAction{ new QAction(QObject::tr("Nouvelle fenêtre"), this) };
+	QAction *m_newWindowAction{ new QAction(QObject::tr("Nouvelle fenÃªtre"), this) };
 	QAction *m_exitAction{ new QAction(QObject::tr("Fermer le navigateur"), this) };
 
 	QVector<QLineEdit*> m_urlAreas{};
@@ -48,6 +51,12 @@ public:
 	QVector<QWidget*> m_spacers{};
 
 	QHash<QString, QAction*> m_editableAction{};
+
+	bool thmSaved{ true };
+
+public slots:
+	void unsaveThm();
+
 protected:
 	void closeEvent(QCloseEvent *event);
 
@@ -57,11 +66,13 @@ private:
 	QString m_savePath{};
 	QString m_thmPath{};
 	QString m_thmName{};
+	QString m_savedThmPath{};
 
 	// Actions for menus
-	QAction *m_newThm{ new QAction(QObject::tr("Nouveau thème"), this) };
-	QAction *m_openThm{ new QAction(QObject::tr("Ouvrir un thème"), this) };
-	QAction *m_saveThm{ new QAction(QObject::tr("Sauvegarder le thème"), this) };
+	QAction *m_newThm{ new QAction(QObject::tr("Nouveau thÃ¨me"), this) };
+	QAction *m_openThm{ new QAction(QObject::tr("Ouvrir un thÃ¨me"), this) };
+	QAction *m_saveThm{ new QAction(QObject::tr("Sauvegarder le thÃ¨me"), this) };
+	QAction *m_saveThmAs{ new QAction(QObject::tr("Sauvegarder le thÃ¨me sous..."), this) };
 
 	QAction *m_newToolBar{ new QAction(QObject::tr("Nouvelle barre d'outils"), this) };
 

@@ -17,8 +17,6 @@ ToolBar::ToolBar(MainWindow * parent) :
 
 	connect(m_paramAction, &QAction::triggered, this, &ToolBar::openParams);
 	connect(m_removeAction, &QAction::triggered, this, &ToolBar::deleteThis);
-
-	setObjectName("tool");
 }
 
 ToolBar::~ToolBar()
@@ -35,7 +33,6 @@ void ToolBar::addNewAction(QAction *action)
 void ToolBar::addNewWidget(QWidget * widget)
 {
 	widget->setParent(m_parent);
-	QMessageBox::information(this, "DEBUG", widget->parent()->objectName());
 	itemInToolBar.push_back(widget);
 	addWidget(widget);
 }
@@ -62,6 +59,7 @@ void ToolBar::reset()
 
 void ToolBar::deleteThis()
 {
+	m_parent->thmSaved = false;
 	m_parent->deleteToolBar(this);
 }
 
@@ -73,7 +71,6 @@ void ToolBar::loadToolBarV0(QTextStream & in)
 void ToolBar::loadToolBarV1(QTextStream & in)
 {
 	unsigned widgetInToolBar{ 0 };
-	unsigned iconSize{ 32 };
 	QString currentWidget{ "nothing" };
 	QString toolBarPos{ "top" };
 
@@ -143,9 +140,9 @@ void ToolBar::loadToolBarV1(QTextStream & in)
 			addNewWidget(newSpacer);
 		}
 		else {
-			QMessageBox::warning(this, tr("Probleme"), tr("Une erreur est présente à la ligne numéro ") + QString::number(i + 1) + tr(". "
-				"La barre de navigation risque de ne pas se charger comme prévu"
-				"Nous vous conseillons de contacter le créateur du thème pour qu'il corrige l'erreur au plus vite."));
+			QMessageBox::warning(this, tr("Probleme"), tr("Une erreur est prÃ©sente Ã  la ligne numÃ©ro ") + QString::number(i + 1) + tr(". "
+				"La barre de navigation risque de ne pas se charger comme prÃ©vu"
+				"Nous vous conseillons de contacter le crÃ©ateur du thÃ¨me pour qu'il corrige l'erreur au plus vite."));
 		}
 	}
 }
@@ -167,6 +164,8 @@ ManageToolBar::ManageToolBar(ToolBar * parentToolBar, MainWindow * parent) :
 	m_view->setModel(m_model);
 	m_view->setEditTriggers(QListView::NoEditTriggers);
 
+	m_size->setValue(m_parentToolBar->iconSize);
+
 	for (int i{ 0 }; i < m_parentToolBar->itemInToolBar.size(); ++i) {
 		QString actionName{ m_parentToolBar->itemInToolBar[i]->objectName() };
 		QIcon actionIcon{};
@@ -175,6 +174,8 @@ ManageToolBar::ManageToolBar(ToolBar * parentToolBar, MainWindow * parent) :
 		m_model->appendRow(new QStandardItem(actionIcon, actionName));
 	}
 
+	m_layout->addWidget(m_infoSize);
+	m_layout->addWidget(m_size);
 	m_layout->addWidget(m_view);
 	m_layout->addLayout(m_buttonLayout);
 
@@ -206,7 +207,7 @@ void ManageToolBar::newItem()
 	items << "urlArea" << "searchArea" << "spacer";
 
 	bool ok{ false };
-	QString newAction{ QInputDialog::getItem(this, tr("Action à ajouter"), tr("Iteme : "), items, 0, false, &ok) };
+	QString newAction{ QInputDialog::getItem(this, tr("Action Ã  ajouter"), tr("Iteme : "), items, 0, false, &ok) };
 
 	if (ok && !newAction.isEmpty()) {
 		if (newAction != "urlArea" &&
@@ -262,6 +263,11 @@ void ManageToolBar::accept()
 			m_parentToolBar->addNewWidget(newSpacer);
 		}
 	}
+
+	m_parentToolBar->iconSize = m_size->value();
+	m_parentToolBar->setIconSize(QSize(m_size->value(), m_size->value()));
+
+	m_parent->thmSaved = false;
 
 	close();
 }

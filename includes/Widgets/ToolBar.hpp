@@ -6,6 +6,8 @@
 #include <QHBoxLayout>
 #include <QDialogButtonBox>
 #include <QToolBar>
+#include <QLabel>
+#include <QSpinBox>
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QListView>
@@ -30,11 +32,12 @@ public:
 	void loadToolBarV1(QTextStream & in);
 
 	QVector<QObject*> itemInToolBar{};
+	int iconSize{ 32 };
 private:
 	void openParams();
 
 	MainWindow *m_parent{ nullptr };
-	QAction *m_paramAction{ new QAction(QIcon("Images/setting.png"), QObject::tr("Paramètres"), this) };
+	QAction *m_paramAction{ new QAction(QIcon("Images/setting.png"), QObject::tr("ParamÃ¨tres"), this) };
 	QAction *m_removeAction{ new QAction(QIcon("Images/remove.png"), QObject::tr("Supprimer la barre d'outils"), this) };
 };
 
@@ -55,6 +58,8 @@ private:
 	QVBoxLayout *m_layout{ new QVBoxLayout(this) };
 	QHBoxLayout *m_buttonLayout{ new QHBoxLayout() };
 
+	QLabel *m_infoSize{ new QLabel(QObject::tr("Taille des icones"), this) };
+	QSpinBox *m_size{ new QSpinBox(this) };
 	QListView *m_view{ new QListView(this) };
 	QStandardItemModel *m_model{ new QStandardItemModel(m_view) };
 
