@@ -24,6 +24,7 @@ MainWindow::MainWindow(QWidget * parent) :
 	connect(m_saveThmAs, &QAction::triggered, this, &MainWindow::saveThmAs);
 	
 	connect(m_newToolBar, &QAction::triggered, this, &MainWindow::createNewToolBar);
+	connect(m_helpAction, &QAction::triggered, this, &MainWindow::openHelp);
 
 	m_newThm->setShortcut(QKeySequence::New);
 	m_openThm->setShortcut(QKeySequence::Open);
@@ -115,6 +116,9 @@ void MainWindow::createActions()
 	m_iconsMenu->addAction(m_newTabAction);
 	m_iconsMenu->addAction(m_newWindowAction);
 	menuBar()->addMenu(m_iconsMenu);
+
+	QMenu *helpMenu{ menuBar()->addMenu("&?") };
+	helpMenu->addAction(m_helpAction);
 
 	connect(m_iconsMenu, &QMenu::triggered, this, &MainWindow::changeIcon);
 }
@@ -220,6 +224,7 @@ void MainWindow::openThm()
 
 		loadToolBar(QString(m_thmPath + "toolBar.txt"));
 		createActions();
+		thmSaved = false;
 		m_saveThm->setEnabled(true);
 		m_saveThmAs->setEnabled(true);
 		m_newToolBar->setEnabled(true);
@@ -315,6 +320,12 @@ void MainWindow::unsaveThm()
 	thmSaved = false;
 }
 
+void MainWindow::openHelp()
+{
+	HelpDialog *dialog{ new HelpDialog(this) };
+	dialog->show();
+}
+
 void MainWindow::closeEvent(QCloseEvent * event)
 {
 	if (!thmSaved) {
@@ -354,4 +365,45 @@ void MainWindow::copyDir(QString src, QString dst)
 	foreach(QString f, dir.entryList(QDir::Files)) {
 		QFile::copy(src + QDir::separator() + f, dst + QDir::separator() + f);
 	}
+}
+
+HelpDialog::HelpDialog(QWidget * parent) : 
+	QDialog(parent)
+{
+	QString text{ tr(""
+		"<h2>Utilisation de l'éditeur de thème.</h2>"
+		"<hr/>"
+		"<ul>"
+		"<li style=\"list-style: none;\"><h3>Déplacer une barre d'outil</h3>"
+		"<p>Pour déplacer un barre d'outil, vous pouvez cliquer et déplacer les points<br>"
+		"<img src=\"Images/Tuto/moveToolBar.jpg\"/><hr/></p>"
+		"</li>"
+		"<li style=\"list-style: none;\"><h3>Ajouter, déplacer, supprimer des items dans une<br/>"
+		"barre d'outils</h3>"
+		"<p>Vous devez cliquer sur l'icone <img src=\"Images/setting.png\" width=32 height=32/> dans la barre d'outils à modifier.<br/>"
+		"Une boite de dialogue s'ouvrira ensuite pour vous permettre de réaliser<br/>"
+		"toutes ces actions.<hr/></p>"
+		"</li>"
+		"<li style=\"list-style: none;\"><h3>Supprimer une barre d'outils</h3>"
+		"<p>Pour cela, vous avez juste à cliquer sur l'icone <img src=\"Images/remove.png\" width=32 height=32/> dans la barre<br>"
+		"d'outils à supprimer<hr/></p>"
+		"</li>"
+		"<li style=\"list-style: none;\"><h3>Changer un icone</h3>"
+		"<p>Pour cela, séléctionnez l'icone à modifier dans le menu \"Icones\"<br/>"
+		"et choisissez le nouvelle icone.<br/>"
+		"<img src=\"Images/Tuto/changeIconMenu.jpg\" /></p>"
+		"</li>"
+		"</ul>"
+	)};
+
+	m_label->setText(text);
+
+	m_layout->addWidget(m_label);
+	m_layout->addWidget(m_boxBtn);
+
+	connect(m_boxBtn, &QDialogButtonBox::accepted, this, &HelpDialog::accept);
+}
+
+HelpDialog::~HelpDialog()
+{
 }

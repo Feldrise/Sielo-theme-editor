@@ -2,10 +2,14 @@
 
 #include <QMainWindow>
 #include <QWidget>
+#include <QDialog>
 #include <QWebEngineView>
+#include <QVBoxLayout>
 #include <QAction>
 #include <QMenu>
+#include <QDialogButtonBox>
 #include <QLineEdit>
+#include <QLabel>
 #include <QIcon>
 #include <QHash>
 #include <QVector>
@@ -13,6 +17,17 @@
 
 #include "includes/Widgets/ToolBar.hpp"
 
+class HelpDialog : public QDialog
+{
+public:
+	HelpDialog(QWidget *parent = nullptr);
+	~HelpDialog();
+
+private:
+	QVBoxLayout *m_layout{ new QVBoxLayout(this) };
+	QLabel *m_label{ new QLabel(this) };
+	QDialogButtonBox *m_boxBtn{ new QDialogButtonBox(QDialogButtonBox::Ok, Qt::Horizontal, this) };
+};
 class MainWindow : public QMainWindow
 {
 public:
@@ -60,6 +75,7 @@ public:
 
 public slots:
 	void unsaveThm();
+	void openHelp();
 
 protected:
 	void closeEvent(QCloseEvent *event);
@@ -79,6 +95,7 @@ private:
 	QAction *m_saveThmAs{ new QAction(QObject::tr("Sauvegarder le thème sous..."), this) };
 
 	QAction *m_newToolBar{ new QAction(QObject::tr("Nouvelle barre d'outils"), this) };
+	QAction *m_helpAction{ new QAction(QObject::tr("Aide") , this) };
 
 	QMenu *m_iconsMenu{ new QMenu(QObject::tr("&Icones"), this) };
 
