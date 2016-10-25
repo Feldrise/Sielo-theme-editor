@@ -26,8 +26,12 @@ MainWindow::MainWindow(QWidget * parent) :
 	
 	connect(m_newToolBar, &QAction::triggered, this, &MainWindow::createNewToolBar);
 
+	m_newThm->setShortcut(QKeySequence::New);
+	m_openThm->setShortcut(QKeySequence::Open);
 	m_saveThm->setShortcut(QKeySequence::Save);
 	m_saveThmAs->setShortcuts(QKeySequence::SaveAs);
+
+	m_newToolBar->setShortcut(QKeySequence("Ctrl+T"));
 
 //	QMessageBox::information(this, "DEBUG", QStandardPaths::writableLocation(QStandardPaths::TempLocation));
 }
