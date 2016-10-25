@@ -3,6 +3,7 @@
 
 #include <QInputDialog>
 #include <QMessageBox>
+#include <QAction>
 #include <QString>
 #include <QTextStream>
 
@@ -199,17 +200,20 @@ ManageToolBar::~ManageToolBar()
 void ManageToolBar::newItem()
 {
 	QStringList items{};
+	QList<QIcon> icons{};
 
 	QHashIterator<QString, QAction*> i{ m_parent->m_editableAction };
 	while (i.hasNext())
 	{
 		i.next();
+		QAction *action = m_parent->m_editableAction[i.key()];
 		items << i.key();
+		icons.append(action->icon());
 	}
 	items << "urlArea" << "searchArea" << "spacer";
 
 	bool ok{ false };
-	QString newAction{ QInputDialog::getItem(this, tr("Action à ajouter"), tr("Iteme : "), items, 0, false, &ok) };
+	QString newAction{ AddItemDialog::getItem(this, tr("Item à ajouter"), tr("iteme :"), items, icons, &ok) };
 
 	if (ok && !newAction.isEmpty()) {
 		if (newAction != "urlArea" &&
@@ -279,4 +283,58 @@ Qt::DropActions QStandardItemModel::supportedDropActions() const
 	return Qt::MoveAction;
 }
 
+AddItemDialog::AddItemDialog(QWidget * parent) :
+	QDialog(parent)
+{
+	m_layout->addWidget(m_label);
+	m_layout->addWidget(m_items);
+	m_layout->addWidget(m_boxBtn);
 
+	connect(m_boxBtn, &QDialogButtonBox::accepted, this, &AddItemDialog::accept);
+	connect(m_boxBtn, &QDialogButtonBox::rejected, this, &AddItemDialog::reject);
+}
+
+AddItemDialog::~AddItemDialog()
+{
+}
+
+void AddItemDialog::setLabelText(const QString & text)
+{
+	m_label->setText(text);
+}
+
+void AddItemDialog::setComboBoxItems(const QStringList & texts, const QList<QIcon> icons)
+{
+	m_items->clear();
+	for (int i{ 0 }; i < texts.size(); ++i) {
+		if (i < icons.size())
+			m_items->addItem(icons[i], texts[i]);
+		else
+			m_items->addItem(texts[i]);
+	}
+}
+
+QString AddItemDialog::textValue()
+{
+	return m_items->currentText();
+}
+
+QString AddItemDialog::getItem(QWidget * parent, const QString & title, const QString & label, const QStringList & texts, const QList<QIcon> icons, bool * ok)
+{
+	AddItemDialog dialog(parent);
+	dialog.setWindowTitle(title);
+	dialog.setLabelText(label);
+	dialog.setComboBoxItems(texts, icons);
+
+	int ret = dialog.exec();
+
+	if (ok)
+		*ok = !!ret;
+
+	if (ret) {
+		return dialog.textValue();
+	}
+	else {
+		return QString();
+	}
+}

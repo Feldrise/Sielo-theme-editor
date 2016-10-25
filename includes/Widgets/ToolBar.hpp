@@ -8,6 +8,7 @@
 #include <QToolBar>
 #include <QLabel>
 #include <QSpinBox>
+#include <QComboBox>
 #include <QPushButton>
 #include <QStandardItemModel>
 #include <QListView>
@@ -67,4 +68,22 @@ private:
 	QPushButton *m_deleteButton{ new QPushButton(QObject::tr("Supprimer"), this) };
 	QDialogButtonBox *m_boxBtn{ new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this) };
 
+};
+
+class AddItemDialog : public QDialog
+{
+public:
+	AddItemDialog(QWidget *parent = nullptr);
+	~AddItemDialog();
+
+	void setLabelText(const QString& text);
+	void setComboBoxItems(const QStringList &texts, const QList<QIcon> icons);
+
+	QString textValue();
+	static QString getItem(QWidget *parent, const QString &title, const QString &label, const QStringList &texts, const QList<QIcon> icons, bool *ok);
+private:
+	QVBoxLayout *m_layout{ new QVBoxLayout(this) };
+	QLabel *m_label{ new QLabel(this) };
+	QComboBox *m_items{ new QComboBox(this) };
+	QDialogButtonBox *m_boxBtn{ new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, Qt::Horizontal, this) };
 };
