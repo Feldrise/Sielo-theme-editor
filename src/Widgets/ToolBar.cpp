@@ -10,6 +10,8 @@ ToolBar::ToolBar(MainWindow * parent) :
 	QToolBar(parent),
 	m_parent(parent)
 {
+	setFloatable(false);
+
 	addAction(m_paramAction);
 	addAction(m_removeAction);
 	addSeparator();

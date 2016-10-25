@@ -46,10 +46,13 @@ void MainWindow::createMenus()
 	fileMenu->addSeparator();
 	fileMenu->addAction(m_saveThm);
 	fileMenu->addAction(m_saveThmAs);
+	m_saveThm->setEnabled(false);
+	m_saveThmAs->setEnabled(false);
 
 	QMenu *themeMenu = menuBar()->addMenu(tr("&Thèmes"));
 
 	themeMenu->addAction(m_newToolBar);
+	m_newToolBar->setEnabled(false);
 }
 
 void MainWindow::createActions()
@@ -171,6 +174,11 @@ void MainWindow::newThm()
 		copyDir("SIcons", themePath->absolutePath());
 		ToolBar *default = addNewToolBar();
 		createActions();
+
+		thmSaved = false;
+		m_saveThm->setEnabled(true);
+		m_saveThmAs->setEnabled(true);
+		m_newToolBar->setEnabled(true);
 	}
 }
 
@@ -191,6 +199,9 @@ void MainWindow::openThm()
 
 		loadToolBar(QString(m_thmPath + "toolBar.txt"));
 		createActions();
+		m_saveThm->setEnabled(true);
+		m_saveThmAs->setEnabled(true);
+		m_newToolBar->setEnabled(true);
 	}
 }
 
@@ -260,6 +271,7 @@ void MainWindow::closeThm()
 	QDir themePath{ m_thmPath };
 	themePath.removeRecursively();
 
+	thmSaved = true;
 	m_savePath = QString();
 	m_thmPath = QString();
 	m_thmName = QString();
@@ -273,7 +285,6 @@ void MainWindow::unsaveThm()
 
 void MainWindow::closeEvent(QCloseEvent * event)
 {
-	QMessageBox::information(this, "DEBUG", "Close event");
 	if (!thmSaved) {
 		QMessageBox::StandardButton save = QMessageBox::question(this, tr("Sauvegarder"), tr("Voulez vous sauvegarder le thème"), QMessageBox::Save | QMessageBox::Cancel | QMessageBox::Close);
 		
