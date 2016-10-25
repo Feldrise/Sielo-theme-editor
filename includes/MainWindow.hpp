@@ -2,7 +2,9 @@
 
 #include <QMainWindow>
 #include <QWidget>
+#include <QWebEngineView>
 #include <QAction>
+#include <QMenu>
 #include <QLineEdit>
 #include <QIcon>
 #include <QHash>
@@ -27,6 +29,8 @@ public:
 	void saveThmAs();
 
 	void closeThm();
+
+	void changeIcon(QAction *action);
 
 	ToolBar* addNewToolBar(Qt::ToolBarArea area = Qt::TopToolBarArea);
 	void createNewToolBar();
@@ -76,5 +80,8 @@ private:
 
 	QAction *m_newToolBar{ new QAction(QObject::tr("Nouvelle barre d'outils"), this) };
 
+	QMenu *m_iconsMenu{ new QMenu(QObject::tr("&Icones"), this) };
+
+    QWebEngineView *m_view{ new QWebEngineView(this) };
 	QVector<ToolBar*> m_toolBars{};
 };

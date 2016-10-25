@@ -1,7 +1,6 @@
 #include "includes/MainWindow.hpp"
 #include "includes/ThemeManager.hpp"
 
-#include <QMenu>
 #include <QMenuBar>
 #include <QMessageBox>
 #include <QInputDialog>
@@ -33,6 +32,9 @@ MainWindow::MainWindow(QWidget * parent) :
 
 	m_newToolBar->setShortcut(QKeySequence("Ctrl+T"));
 
+	m_view->load(QUrl("http://feldrise.com"));
+	setCentralWidget(m_view);
+
 //	QMessageBox::information(this, "DEBUG", QStandardPaths::writableLocation(QStandardPaths::TempLocation));
 }
 
@@ -61,45 +63,60 @@ void MainWindow::createMenus()
 
 void MainWindow::createActions()
 {
-		m_backAction->setIcon(QIcon(m_thmPath + "back.png"));
-		m_backAction->setObjectName("back");
-		m_editableAction.insert("back", m_backAction);
-		m_nextAction->setIcon(QIcon(m_thmPath + "next.png"));
-		m_nextAction->setObjectName("next");
-		m_editableAction.insert("next", m_nextAction);
-		m_homeAction->setIcon(QIcon(m_thmPath + "home.png"));
-		m_homeAction->setObjectName("home");
-		m_editableAction.insert("home", m_homeAction);
-		m_refreshOrStopAction->setIcon(QIcon(m_thmPath + "refresh.png"));
-		m_refreshOrStopAction->setObjectName("refresh");
-		m_editableAction.insert("refresh", m_refreshOrStopAction);
-		m_goAction->setIcon(QIcon(m_thmPath + "go.png"));
-		m_goAction->setObjectName("go");
-		m_editableAction.insert("go", m_goAction);
-		m_searchAction->setIcon(QIcon(m_thmPath + "search.png"));
-		m_searchAction->setObjectName("search");
-		m_editableAction.insert("search", m_searchAction);
-		m_sowHistory->setIcon(QIcon(m_thmPath + "history.png"));
-		m_sowHistory->setObjectName("history");
-		m_editableAction.insert("history", m_sowHistory);
-		m_preferencesAction->setIcon(QIcon(m_thmPath + "preferences.png"));
-		m_preferencesAction->setObjectName("preferences");
-		m_editableAction.insert("preferences", m_preferencesAction);
-		m_addBookmarksAction->setIcon(QIcon(m_thmPath + "addFavoris.png"));
-		m_addBookmarksAction->setObjectName("addBookmarks");
-		m_editableAction.insert("addBookmarks", m_addBookmarksAction);
-		m_bookmarsManagerAction->setIcon(QIcon(m_thmPath + "favoris.png"));
-		m_bookmarsManagerAction->setObjectName("bookmarksManager");
-		m_editableAction.insert("bookmarksManager", m_bookmarsManagerAction);
-		m_newTabAction->setIcon(QIcon(m_thmPath + "newTab.png"));
-		m_newTabAction->setObjectName("newTab");
-		m_editableAction.insert("newTab", m_newTabAction);
-		m_newWindowAction->setIcon(QIcon(m_thmPath + "newWindow.png"));
-		m_newWindowAction->setObjectName("newWindow");
-		m_editableAction.insert("newWindow", m_newWindowAction);
-		m_exitAction->setIcon(QIcon(m_thmPath + "exit.png"));
+	
+	m_backAction->setIcon(QIcon(m_thmPath + "back.png"));
+	m_backAction->setObjectName("back");
+	m_editableAction.insert("back", m_backAction);
+	m_nextAction->setIcon(QIcon(m_thmPath + "next.png"));
+	m_nextAction->setObjectName("next");
+	m_editableAction.insert("next", m_nextAction);
+	m_homeAction->setIcon(QIcon(m_thmPath + "home.png"));
+	m_homeAction->setObjectName("home");
+	m_editableAction.insert("home", m_homeAction);
+	m_refreshOrStopAction->setIcon(QIcon(m_thmPath + "refresh.png"));
+	m_refreshOrStopAction->setObjectName("refresh");
+	m_editableAction.insert("refresh", m_refreshOrStopAction);
+	m_goAction->setIcon(QIcon(m_thmPath + "go.png"));
+	m_goAction->setObjectName("go");
+	m_editableAction.insert("go", m_goAction);
+	m_searchAction->setIcon(QIcon(m_thmPath + "search.png"));
+	m_searchAction->setObjectName("search");
+	m_editableAction.insert("search", m_searchAction);
+	m_sowHistory->setIcon(QIcon(m_thmPath + "history.png"));
+	m_sowHistory->setObjectName("history");
+	m_editableAction.insert("history", m_sowHistory);
+	m_preferencesAction->setIcon(QIcon(m_thmPath + "preferences.png"));
+	m_preferencesAction->setObjectName("preferences");
+	m_editableAction.insert("preferences", m_preferencesAction);
+	m_addBookmarksAction->setIcon(QIcon(m_thmPath + "addFavoris.png"));
+	m_addBookmarksAction->setObjectName("addBookmarks");
+	m_editableAction.insert("addBookmarks", m_addBookmarksAction);
+	m_bookmarsManagerAction->setIcon(QIcon(m_thmPath + "favoris.png"));
+	m_bookmarsManagerAction->setObjectName("bookmarksManager");
+	m_editableAction.insert("bookmarksManager", m_bookmarsManagerAction);
+	m_newTabAction->setIcon(QIcon(m_thmPath + "newTab.png"));
+	m_newTabAction->setObjectName("newTab");
+	m_editableAction.insert("newTab", m_newTabAction);
+	m_newWindowAction->setIcon(QIcon(m_thmPath + "newWindow.png"));
+	m_newWindowAction->setObjectName("newWindow");
+	m_editableAction.insert("newWindow", m_newWindowAction);
+	m_exitAction->setIcon(QIcon(m_thmPath + "exit.png"));
 
+	m_iconsMenu->addAction(m_backAction);
+	m_iconsMenu->addAction(m_nextAction);
+	m_iconsMenu->addAction(m_homeAction);
+	m_iconsMenu->addAction(m_refreshOrStopAction);
+	m_iconsMenu->addAction(m_goAction);
+	m_iconsMenu->addAction(m_searchAction);
+	m_iconsMenu->addAction(m_sowHistory);
+	m_iconsMenu->addAction(m_preferencesAction);
+	m_iconsMenu->addAction(m_addBookmarksAction);
+	m_iconsMenu->addAction(m_bookmarsManagerAction);
+	m_iconsMenu->addAction(m_newTabAction);
+	m_iconsMenu->addAction(m_newWindowAction);
+	menuBar()->addMenu(m_iconsMenu);
 
+	connect(m_iconsMenu, &QMenu::triggered, this, &MainWindow::changeIcon);
 }
 
 void MainWindow::loadToolBar(QString & filePath)
@@ -280,6 +297,17 @@ void MainWindow::closeThm()
 	m_thmPath = QString();
 	m_thmName = QString();
 	m_savedThmPath = QString();
+}
+
+void MainWindow::changeIcon(QAction *action)
+{
+	QString iconPath{ QFileDialog::getOpenFileName(this, tr("Nouvel icone"), QString(), tr("Images (*.png)")) };
+
+	if (!iconPath.isEmpty()) {
+		QFile::remove(m_thmPath + action->objectName() + ".png");
+		QFile::copy(iconPath, m_thmPath + action->objectName() + ".png");
+		action->setIcon(QIcon(m_thmPath + action->objectName() + ".png"));
+	}
 }
 
 void MainWindow::unsaveThm()
