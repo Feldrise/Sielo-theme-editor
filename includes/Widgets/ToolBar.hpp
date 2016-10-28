@@ -38,8 +38,8 @@ private:
 	void openParams();
 
 	MainWindow *m_parent{ nullptr };
-	QAction *m_paramAction{ new QAction(QIcon("Images/setting.png"), QObject::tr("Paramètres"), this) };
-	QAction *m_removeAction{ new QAction(QIcon("Images/remove.png"), QObject::tr("Supprimer la barre d'outils"), this) };
+    QAction *m_paramAction{ new QAction(QIcon(":/data/images/setting.png"), QObject::tr("Paramètres"), this) };
+    QAction *m_removeAction{ new QAction(QIcon(":/data/images/remove.png"), QObject::tr("Supprimer la barre d'outils"), this) };
 };
 
 class ManageToolBar : public QDialog

@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/data/themes">
+        <file alias="defaultThm">DefaultThm.snthm</file>
+    </qresource>
+    <qresource prefix="/data/images">
+        <file alias="remove.png">Images/remove.png</file>
+        <file alias="setting.png">Images/setting.png</file>
+    </qresource>
+</RCC>

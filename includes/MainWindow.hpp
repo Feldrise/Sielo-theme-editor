@@ -36,7 +36,7 @@ public:
 
 	void createMenus();
 	void createActions();
-	void loadToolBar(QString &filePath);
+    void loadToolBar(const QString &filePath);
 
 	void newThm();
 	void openThm();

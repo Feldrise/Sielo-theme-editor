@@ -123,7 +123,7 @@ void MainWindow::createActions()
 	connect(m_iconsMenu, &QMenu::triggered, this, &MainWindow::changeIcon);
 }
 
-void MainWindow::loadToolBar(QString & filePath)
+void MainWindow::loadToolBar(const QString & filePath)
 {
 	QFile file{ filePath };
 
@@ -193,11 +193,11 @@ void MainWindow::newThm()
 		if (!m_thmPath.isEmpty())
 			closeThm();
 
-		m_thmPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/SNThemeEditor/" + m_thmName + "/";
-		QDir *themePath{ new QDir(m_thmPath) };
-		themePath->mkpath(m_thmPath);
-		copyDir("SIcons", themePath->absolutePath());
-		ToolBar *default = addNewToolBar();
+        m_thmPath = QStandardPaths::writableLocation(QStandardPaths::TempLocation) + "/SNThemeEditor/" + m_thmName + "/";
+        QDir *themePath{ new QDir(m_thmPath) };
+        themePath->mkpath(m_thmPath);
+        ThemeManager::decompressTheme(":/data/themes/defaultThm", themePath->absolutePath());
+        ToolBar *defaut = addNewToolBar();
 		createActions();
 
 		thmSaved = false;
